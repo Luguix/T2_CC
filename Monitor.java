@@ -1,20 +1,40 @@
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+
+
 public class Monitor {
 
-	public Passageiro[] passageiros;
-	public Taxi[] taxis;
-	public int idx_ultimo_passageiro;
-	public int n_taxis_disponiveis;
+	private ConcurrentLinkedQueue<Passageiro> passageiros;
+	private Taxi[] taxis;
+	private boolean expediente = true;
+	private int n_taxis_disponiveis;
 	
-	public Monitor(int N, int M, Passageiro[] p, Taxi[] t) {
-		this.passageiros = p;
+	
+	public Monitor(int N, int M, Taxi[] t) {
 		this.taxis = t;
-		this.idx_ultimo_passageiro = -1;
+		this.passageiros = new ConcurrentLinkedQueue<Passageiro>();
 		this.n_taxis_disponiveis = t.length;
 	}
 	
+	public synchronized void chamada(Passageiro p) {
+		passageiros.add(p);
+		notifyAll();
+	}
+	
 	public synchronized Passageiro proximo_passageiro() {
-		if(idx_ultimo_passageiro >= passageiros.length-1) return null;
-		else return passageiros[++idx_ultimo_passageiro];
+		while(expediente && passageiros.isEmpty()) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		if(expediente || !passageiros.isEmpty()) return passageiros.poll();
+		else return null;
+	}
+	
+	public synchronized void encerra_expediente() {
+		this.expediente = false;
 	}
 	
 	public synchronized Taxi taxi_mais_proximo(int x, int y) {

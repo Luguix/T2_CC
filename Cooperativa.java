@@ -25,7 +25,7 @@ public class Cooperativa extends Thread {
 				taxi.x = passageiro.xf;
 				taxi.y = passageiro.yf;
 				
-			System.out.println("Passageiro #" + passageiro.id + " chegou a (" + taxi.x + ", " + taxi.y + "), liberando o taxi #" + taxi.id + ".");
+				System.out.println("Passageiro #" + passageiro.id + " chegou a (" + taxi.x + ", " + taxi.y + "), liberando o taxi #" + taxi.id + ".");
 				m.notifica(taxi);
 			}
 		} catch(InterruptedException e) { return; }

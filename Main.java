@@ -6,7 +6,7 @@ public class Main {
 	
 	public static void main(String[] args) {
 		Scanner s = new Scanner(System.in);
-
+		
 		// Lendo as dimensões do mapa.
 		int N = s.nextInt();
 //		System.out.println(N);
@@ -35,8 +35,10 @@ public class Main {
 		}
 		
 		// Iniciando o monitor e threads
-		Monitor m = new Monitor(M,N,passageiros,taxis);
+		Monitor m = new Monitor(M,N,taxis);
+		Chamada ch = new Chamada(passageiros,m);
 		Cooperativa[] coop = new Cooperativa[nthreads];
+		ch.run();
 		for(int i = 0; i < nthreads; ++i) {
 			coop[i] = new Cooperativa(m);
 			coop[i].start();
@@ -47,6 +49,8 @@ public class Main {
 			for (Thread t : coop) {
 				t.join();
 			}
+			System.out.println("eu chego aqui");
+			ch.join();
 		} catch (InterruptedException e) { return; }
 		
 		System.out.println("");
