@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class Main {
@@ -5,7 +7,19 @@ public class Main {
 	static final int nthreads = Runtime.getRuntime().availableProcessors();
 	
 	public static void main(String[] args) {
-		Scanner s = new Scanner(System.in);
+
+		Scanner s = null;
+		
+		if(args.length > 0) {
+			try { 
+				s = new Scanner(new File(args[0])); 
+			} catch(FileNotFoundException e) { 
+				System.out.println("File not found :(");
+				s = new Scanner(System.in);
+			}
+		} else {
+			s = new Scanner(System.in);
+		}
 		
 		// Lendo as dimensões do mapa.
 		int N = s.nextInt();
